@@ -16,6 +16,7 @@ function main () {
     var rulesText = $('#rules').val();
     var input = $('#input').val();
     var rules;
+    $('#error').text(""); // Clear any previous error
     try {
         rules = JSON.parse(rulesText);
     } catch (e) {
