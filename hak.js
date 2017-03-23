@@ -19,7 +19,8 @@ function main () {
     try {
         rules = JSON.parse(rulesText);
     } catch (e) {
-        $('#output').text(e); // FIXME: Colour it red
+        $('#error').text(e);
+        return;
     }
     $('#output').text(hak(rules, input));
 }
