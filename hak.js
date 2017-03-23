@@ -25,3 +25,5 @@ function main () {
     }
     $('#output').text(hak(rules, input));
 }
+
+$(document).ready(main);
