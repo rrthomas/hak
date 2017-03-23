@@ -16,6 +16,10 @@ function main () {
     var rulesText = $('#rules').val();
     var input = $('#input').val();
     var rules;
-    rules = JSON.parse(rulesText); // FIXME: deal with errors and output that is not an object
+    try {
+        rules = JSON.parse(rulesText);
+    } catch (e) {
+        $('#output').text(e); // FIXME: Colour it red
+    }
     $('#output').text(hak(rules, input));
 }
