@@ -18,7 +18,7 @@ function main () {
     var rules;
     $('#error').text(""); // Clear any previous error
     try {
-        rules = JSON.parse(rulesText);
+        rules = jsyaml.safeLoad(rulesText);
     } catch (e) {
         $('#error').text(e);
         return;
