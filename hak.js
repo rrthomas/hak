@@ -19,6 +19,8 @@ function main () {
     $('#error').text(""); // Clear any previous error
     try {
         rules = jsyaml.safeLoad(rulesText);
+        if (typeof(rules) != "object")
+            throw("Syntax error: rules are valid YAML, but not an object")
     } catch (e) {
         $('#error').text(e);
         return;
