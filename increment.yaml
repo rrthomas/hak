@@ -1,0 +1,8 @@
+# Increment a binary number
+# From http://www.freefour.com/rewriting-as-a-computational-paradigm/
+
+"1_": "1++"
+"0_": "1"
+"01++": "10"
+"11++": "1++0"
+"_1++": "_10"
