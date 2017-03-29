@@ -14,18 +14,21 @@ function hak (rules, input) {
 
 function main () {
     var rulesText = $('#rules').val();
-    var input = $('#input').val();
-    var rules;
-    $('#error').text(""); // Clear any previous error
-    try {
-        rules = jsyaml.safeLoad(rulesText);
-        if (typeof(rules) != "object")
-            throw("Syntax error: rules are valid YAML, but not an object")
-    } catch (e) {
-        $('#error').text(e);
-        return;
+    if (rulesText != "") { // Do nothing if input is empty (no error)
+        var input = $('#input').val();
+        var rules;
+        $('#error').text(""); // Clear any previous error
+        // FIXME: Make better syntax, like Thue
+        try {
+            rules = jsyaml.safeLoad(rulesText);
+            if (typeof(rules) != "object")
+                throw("Syntax error: rules are valid YAML, but not an object")
+        } catch (e) {
+            $('#error').text(e);
+            return;
+        }
+        $('#output').text(hak(rules, input));
     }
-    $('#output').text(hak(rules, input));
 }
 
 $(document).ready(main);
