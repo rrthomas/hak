@@ -1,6 +1,5 @@
 # Convert a text to just its punctuation
 # After https://www.fastcodesign.com/3055691/8-classic-novels-reduced-to-their-punctuation
-# FIXME: Fix display so that each non-punctuation character takes some space
 
 "a": " "
 "b": " "
