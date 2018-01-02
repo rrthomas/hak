@@ -1,5 +1,7 @@
 function hak (rules, input) {
     var output = input;
+    // FIXME: Factor out fixpoint
+    // FIXME: Factor out the execution mechanism altogether
     while (true) {
         for (let [key, value] of Object.entries(rules)) {
             output = output.replace(key, value);
