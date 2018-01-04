@@ -1,6 +1,6 @@
 #!/usr/bin/env lua
 -- Array Machine (Hak VM)
--- Reuben Thomas 31/12/17-2/1/18
+-- Reuben Thomas 31/12/17-4/1/18
 
 -- Cell representation: {atom, children (array of cells), parent}
 -- Location representation: {parent, index}
@@ -23,7 +23,7 @@ end
 -- Execution loop
 local function execute (pp)
   while pp ~= nil and pp ~= Nil do
-    pp = evaluate(pp)
+    pp = evaluate (pp)
   end
 end
 
@@ -31,11 +31,11 @@ local function Instruction (code)
   return function (inst)
     local arg = {}
     for i = 1, #inst.children do
-      arg.insert(evaluate(inst.children(i)))
+      arg.insert (evaluate (inst.children (i)))
     end
-    local ret, pp = code(table.unpack(arg))
+    local ret, pp = code (table.unpack (arg))
     if pp == nil then
-      pp = Instructions.Next(pp)
+      pp = Instructions.Next (pp)
     end
     return ret, pp
   end
@@ -46,7 +46,14 @@ Actions = {
   ["nil"] = function () return Nil end, -- distinguished value
 
   -- Data
-  parent = function (loc) return loc.parent end, -- FIXME: Return Nil for Root
+  parent = function (loc)
+    if loc.parent.parent == nil then -- Return Nil for root node
+      return Nil
+    else
+      return loc.parent
+    end
+  end,
+
   children = function (loc) return loc.parent.children end,
 
   previous = function (loc)
@@ -74,12 +81,12 @@ Actions = {
   end,
 
   insertBefore = function (loc)
-    table.insert(loc.parent.children, loc.index, Nil)
+    table.insert (loc.parent.children, loc.index, Nil)
     return {parent = loc.parent, index = 1}
   end,
 
   insertAfter = function (loc)
-    table.insert(loc.parent.children, Nil)
+    table.insert (loc.parent.children, Nil)
     return {parent = loc.parent, index = #loc.parent.children}
   end,
 
@@ -93,7 +100,7 @@ Actions = {
     local arg = {...}
     for i = 1, #arg do
       if atom_0 == i.atom then
-        return evaluate(i.children)
+        return evaluate (i.children)
       end
     end
     return cell_e
@@ -101,9 +108,9 @@ Actions = {
 
   jump = function (target, val)
     if target.atom == "Save" then
-      local loc = evaluate(target.children[0])
+      local loc = evaluate (target.children[0])
       loc.children = val
-      return val, Actions.next(target)
+      return val, Actions.next (target)
     end
     return Nil
   end,
@@ -112,29 +119,31 @@ Actions = {
 }
 
 Instructions = {}
-for name, fn in pairs(Actions) do
-  Instructions[name] = Instruction(fn)
+for name, fn in pairs (Actions) do
+  Instructions[name] = Instruction (fn)
 end
 
--- Convert {atom, children} to cell representation
-local function Cell (val, parent) -- TODO: can we set the parent after each recursive call only?
-  local cell = {parent = parent}
-  local ty = type(val)
-  if ty == "table" then
-    if val.atom then
+-- Convert {atom = ATOM, children = LIST}/atom to cell representation
+local function Cell (val)
+  local function mkCell (val, parent)
+    local cell = {parent = parent}
+    local ty = type (val)
+    if ty == "table" then -- assume cell
       cell.atom = val.atom
       if val.children then
-        cell.children = Cell(val.children, cell)
-        for _, v in ipairs(val.children) do
-          local new = Actions.insertAfter({parent = parent, index = #parent.children})
-          Actions.set(new, Cell(v, parent))
+        cell.children = {}
+        for _, v in ipairs (val.children) do
+          table.insert (cell.children, Cell (v, cell))
         end
       end
+    else -- assume atom
+      cell.atom = val
     end
-  else
-    cell.atom = val
+    return cell
   end
-  return cell
+  local parent = {}
+  parent.children = mkCell (val, parent)
+  return parent
 end
 
 return {
