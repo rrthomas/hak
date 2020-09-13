@@ -1,0 +1,34 @@
+#+TITLE: Array machine
+#+SUBTITLE: hak VM
+
+A nested array of cells:
+
+#+name: array-syntax
+#+begin_src ebnf :file array-syntax.eps :exports none
+location = [label ":"] (atom | array).
+atom = symbol | label.
+array = "(" {location}* ")".
+#+end_src
+
+#+RESULTS: array-syntax
+[[file:array-syntax.eps]]
+
+[[file:ebnf--array-syntax.eps]]
+
+#+BEGIN_COMMENT
+Terser but less clear:
+location = [label ":"] (symbol | label | "(" {location}* ")")
+#+END_COMMENT
+
+A symbol is a member of a given alphabet, or an instruction symbol.
+
+Code is represented as an array of instruction symbols each followed by its arguments.
+
+Labels name locations. When a label is mentioned, the lexically-closest instance is used (left, then up).
+
+Code is executed thus:
+
+0. [@0]Start at the ~First~ cell of the root array.
+1. <<next>>If the current cell is ~Nil~, halt.
+2. If the current cell contains an instruction symbol, evaluate the instruction’s arguments then execute the instruction; invalid or missing arguments cause the instruction to evaluate to ~Nil~.
+3. Make the ~Next~ cell the current one, and continue from step [[next]].
