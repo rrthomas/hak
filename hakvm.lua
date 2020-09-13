@@ -134,10 +134,12 @@ Actions = {
 
 Instructions = {}
 for name, fn in pairs (Actions) do
-  Instructions[name] = Instruction (fn)
+  local iname = string.upper (name:sub (1, 1)) .. name:sub (2)
+  Instructions[iname] = Instruction (fn)
 end
 
 -- Convert {atom = ATOM, children = LIST}/atom to cell representation
+-- FIXME: use instructions to construct the cell representation
 local function Cell (val)
   local function mkCell (val, parent)
     local cell = {parent = parent}
