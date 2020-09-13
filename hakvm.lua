@@ -54,6 +54,10 @@ Actions = {
     end
   end,
 
+  -- FIXME: currently this does not return a location; if the children list is empty, how to discriminate between empty list and Nil?
+  -- Could have location with index = Nil, but this is not Set-able
+  -- Could have Nil? and Empty? predicates, only allow Setting of non-Empty location
+  -- Or have different types of location: array and cell; Parent and Children return array, can apply Empty? to it; Start/End take array and return cell (if poss); other location instructions take/return cell; add Array instruction that returns array of a cell
   children = function (loc) return loc.parent.children end,
 
   previous = function (loc)
