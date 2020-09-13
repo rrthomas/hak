@@ -155,9 +155,9 @@ local function Cell (val)
     end
     return cell
   end
-  local parent = {}
-  parent.children = mkCell (val, parent)
-  return parent
+  local root = {}
+  root.children = mkCell (val, root)
+  return root
 end
 
 return {
