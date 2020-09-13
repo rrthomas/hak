@@ -72,3 +72,43 @@ datatype exp = Alt of exp * exp
 #+END_SRC
 
 #  LocalWords:  Mit
+
+* Concrete homoiconic hak
+
+Abstract syntax isomorphic to both compiled code /and/ concrete memory layout (bit-level layout not specified, but could be).
+
+** Primitive structures
+
+3 data structures, based on word-sized scalars (including references):
+
++ Table tables: scalar → scalar
++ Array arrays: scalar
++ Cell: cells/lists: scalar, ref cell
+
+** Primitive data types (atoms)
+
++ Nil
++ Number
++ Bytes (/not/ String, but allow UTF-8 notation for literals)
++ Boolean (= success/failure)
++ Ref (to atom or structure)
++ Quote
+
+** Basic instructions
+
+A ‘constructor’/literal for each primitive data type and structure
+
++ new size → Ref (size in words)
++ free address → Bytes (freed thing)
++ resize Ref size → Ref
++ copy Ref_1 Ref_2 → Ref_2
++ (arithmetic)
++ (byte)
++ (logical)
++ get Ref offset → Atom
++ set Ref offset Atom → Atom
++ if Boolean Atom_1 Atom_2 → Atom_{1 or 2}
++ seq Atom_1…Atom_n
++ local → Ref (local frame)
++ quote Thing (initial non-terminal of grammar; how do we do quasiquoting?)
++ call Ref_Code Ref_offset Ref_arg → Atom_result | ⊥
