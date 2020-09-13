@@ -70,7 +70,7 @@ Actions = {
     return Nil
   end,
 
-  start = function (loc) return {parent = loc.parent, index = 0} end,
+  start = function (loc) return {parent = loc.parent, index = 1} end,
   ["end"] = function (loc) return {parent = loc.parent, index = #loc.parent.children} end,
 
   get = function (loc) return loc.parent.children[loc.index] end,
