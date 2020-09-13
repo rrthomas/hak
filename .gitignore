@@ -1,0 +1,8 @@
+*.tex
+*.pdf
+*.eps
+hello.txt
+uptown.html
+downtown.html
+margin.html
+compiled/
