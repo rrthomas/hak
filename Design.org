@@ -1,0 +1,74 @@
+#+TITLE: Hak design
+
+* Aim
+
+What we really want is a tool for describing languages. This captures the essential circularity of computing: we turn language into language (as opposed to real-world action, where we turn matter/energy into matter/energy + entropy); the transformations are typically to what feels like another domain (irreversible).
+
+Turning one language into another covers compilation, data representation, computation etc.
+
+We want to work with abstract syntax: it’s practical now to work with HLLs and hence don’t need to do text parsing and assembler output; assume rather that we have built-in parsing and HLL output.
+
+So we’re after an abstract-syntax–oriented version of META that can be very simply implemented in a typical modern language. /But/ we can use a simple VM to start again from the low level, to build a system from scratch. Where in the past we would build only up, now we build down and up.
+
+Start with our META in itself and in e.g. JavaScript. Also assembler for a simple VM (Mit).
+
+What do we need?
+
++ Sequence
++ Alternation
++ Repetition
++ Output
+
+Question: can we prove that the output of a transformation satisfies the grammar of the output language? (In some sense it defines it!) The transformation defines /an/ input language; in some sense it may not define the whole language (it could be used to parse a subset).
+
+Output should be either tree form or flattened tokens. Input is a tree, but can also be treated as flattened, in prefix order.
+
+* Meta II version
+
+#+BEGIN_SRC META
+start = production
+alt = seq+
+seq = (prim | output)+
+output =
+#+END_SRC
+
+This is just recognizing the grammar, not doing anything with it.
+
+** Arithmetic expressions
+
+#+BEGIN_SRC META
+prim = number | (exp)
+prod = prim (x prod | Empty)
+exp = prod (+ prod | Empty)
+#+END_SRC
+
+Or in ‘ML’ notation:
+
+#+BEGIN_SRC ml
+prim: Alt(Output(Num, number), Seq(Lit('('), Production(exp), Lit(')')))
+prod: Seq(prim, Alt(Seq(Lit('×'), Output(Prod, Production(prod)), Empty))
+exp: Seq(prod, Alt(Seq(Lit('+'), Output(Sum, Production(exp)), Empty))
+start: Output(exp)
+#+END_SRC
+
+Example expression in ‘ML’ notation “(3 + 4 × 5)”:
+
+#+BEGIN_SRC ml
+Exp(Prod(Prim(Number(3))), Lit('+'), Exp(Prod(Prim(Number(4)), Lit('×'), Prod(Prim(Number(5))))))
+#+END_SRC ml
+
+** Programs
+
+#+BEGIN_SRC ml
+type program = (id * exp) map
+datatype exp = Alt of exp * exp
+             | Seq of exp * exp
+             | Rep of exp
+             | Literal of string
+             | Empty
+             | Production of id
+             | Output of id * exp
+             | Output of string
+#+END_SRC
+
+#  LocalWords:  Mit
