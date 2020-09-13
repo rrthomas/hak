@@ -80,6 +80,20 @@ Actions = {
     return val
   end,
 
+  -- FIXME: Document this instruction
+  grow = function (loc)
+    if not loc.parent.children or loc.parent.children == Nil then
+      loc.parent.children = {}
+    end
+    return loc
+  end,
+
+  -- FIXME: Document this instruction
+  prune = function (loc)
+    loc.children = Nil
+    return loc
+  end,
+
   insertBefore = function (loc)
     table.insert (loc.parent.children, loc.index, Nil)
     return {parent = loc.parent, index = 1}
