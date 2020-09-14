@@ -1,3 +1,4 @@
 + Get rid of Run button (always-updating); this is a change of style, not an absolute, but clearly right for this case
 + 3 languages of Hak: nancy, string rewriting rules & ??? Or, nancy = bracketing, string rewriting = combinators without bracketing, so together = Turing complete?
 + Google Caja: use for hak terminal (in Electron?)
++ META co-system: MIT (MIT hak (Y))

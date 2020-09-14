@@ -32,3 +32,32 @@ Code is executed thus:
 1. <<next>>If the current cell is ~Nil~, halt.
 2. If the current cell contains an instruction symbol, evaluate the instruction’s arguments then execute the instruction; invalid or missing arguments cause the instruction to evaluate to ~Nil~.
 3. Make the ~Next~ cell the current one, and continue from step [[next]].
+
+#+ATTR_LATEX: :align lp{6cm}
+| *Instruction*                                             | *Value & Action*                                                                                                                           |
+|-----------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------|
+| <32>                                                      | <32>                                                                                                                                       |
+| ~Nil~                                                     | ~Itself~                                                                                                                                   |
+|-----------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------|
+| *Data*                                                    |                                                                                                                                            |
+|-----------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------|
+| (~Parent~ \vert ~First~ \vert ~Last~) array                       | Evaluates to corresponding cell location, or ~Nil~ if none                                                                                 |
+| (~Previous~ \vert ~Next~) cell                                | Ditto                                                                                                                                      |
+| ~Get~ cell                                                | Evaluates to the value of cell                                                                                                             |
+| ~Set~ cell location                                       | Evaluates to location; sets given cell to that atom                                                                                        |
+| ~Insert~(~Before~​\vert​~After~) cell                           | Evaluates to the location of a new cell, which is inserted at the given location                                                           |
+| (~Pre~​\vert​~Ap~) ~pend~ array                                 | Evaluates to the location of a new cell, which is inserted at the start/end of the array                                                   |
+| ~Remove~ cell                                             | Evaluates to the value of the cell, which is removed                                                                                       |
+| ~Copy~ cell_1 cell_2                                        | Copy contents of cell_1 to cell_2. If cell_1 is an array, a shallow copy of the array is made                                                 |
+|-----------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------|
+| *Control*                                                 |                                                                                                                                            |
+| ~If~ location_0 location_e ~(~ (location_i1 location_i2)* ~)~ | Compare contents of locations with value at each location_i1; if a match is found, evaluate to value at location_i2, else value at location_e |
+| ~Jump~ cell lcoation                                      | Transfer control to cell                                                                                                                   |
+| ~Save~ cell                                               | If reached from a ~Jump~, act like ~Set~ cell location; otherwise like ~Set~ cell ~Nil~                                                    |
+|-----------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------|
+
+** Choices
+
++ GC rather than dangling pointers
++ Nested code rather than registers or a stack
++ Possibly non–constant-time operations (~Insert~​/​~Remove~​/​~Append~​/​~Prepend~) instead of numbers; ~switch~ instead of hard-to-optimize ~if~.
